@@ -1,5 +1,4 @@
 import express from "express"
-import users from './models/schema';
 import bodyParser from "express";
 import { UserRoutes } from "routes"
 
