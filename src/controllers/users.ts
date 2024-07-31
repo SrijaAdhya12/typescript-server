@@ -73,3 +73,26 @@ export const updateUser = (req: express.Request, res: express.Response): void =>
     res.status(500).json({ message: 'Error updating user', error: error.message });
   }
 };
+
+
+// delete an user
+export const deleteUser = (req: express.Request, res: express.Response): void => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+
+    const userIndex = users.findIndex(user => user.id === userId);
+    if (userIndex === -1) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    const deletedUser = users[userIndex];
+
+    users.splice(userIndex, 1);
+
+    res.status(200).json(deletedUser);
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Error deleting user', error: error.message });
+  }
+}
