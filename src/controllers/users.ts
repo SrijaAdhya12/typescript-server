@@ -1,5 +1,5 @@
-import users from '../models/schema';
-import { User } from "../models/schema"
+import users from '../models/users';
+import { User } from "../models/users"
 import express from "express"
 
 const fetchAllUsers = (): User[] => {
