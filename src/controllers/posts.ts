@@ -31,6 +31,7 @@ export const createPost = (req: express.Request, res: express.Response): void =>
     }
 };
 
+// update a post
 export const updatePost = (req: express.Request, res: express.Response): void => {
     try {
         const postId = parseInt(req.params.id, 10);
@@ -60,3 +61,23 @@ export const updatePost = (req: express.Request, res: express.Response): void =>
         res.status(500).json({ message: 'Error updating post', error: error.message });
     }
 };
+
+// delete an post
+export const deletePost = (req: express.Request, res: express.Response): void => {
+    try {
+        const postId = parseInt(req.params.id, 10);
+        const userIndex = posts.findIndex(post => post.id === postId);
+        if (userIndex === -1) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+        const deletedUser = posts[userIndex];
+
+        posts.splice(userIndex, 1);
+
+        res.status(200).json(deletedUser);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Error deleting user', error: error.message });
+    }
+}
