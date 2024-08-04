@@ -6,6 +6,30 @@ const fetchAllUsers = (): User[] => {
   return users;
 };
 
+// Get User by Id
+
+export const getUserById = (req: express.Request, res: express.Response): void => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+
+    if (isNaN(userId)) {
+      res.status(400).json({ message: 'Invalid user ID' });
+      return;
+    }
+
+    const user = users.find(user => user.id === userId);
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Error fetching user', error: error.message });
+  }
+};
 
 // Get all users
 export const getAllUsers = (req: express.Request, res: express.Response): void => {
