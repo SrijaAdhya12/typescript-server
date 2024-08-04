@@ -43,27 +43,64 @@ export const getAllUsers = (req: express.Request, res: express.Response): void =
 
 
 // create an user
+
+const generateUniqueId = (): number => {
+  let id: number;
+  do {
+    id = Math.floor(Math.random() * 1000);
+  } while (users.some(user => user.id === id));
+  return id;
+};
+
 export const createUser = (req: express.Request, res: express.Response): void => {
   try {
-    const { id, name, email } = req.body as { id: number, name: string, email: string };
+    const { name, email } = req.body as { name: string, email: string };
 
-    if (!id || !name || !email) {
-      res.status(400).json({ message: 'All fields (id, name, email, password) are required' });
+    if (!name || !email) {
+      res.status(400).json({ message: 'Name and email are required' });
       return;
     }
-    const existingUser = users.find(user => user.id === id || user.email === email);
-    if (existingUser) {
-      res.status(400).json({ message: 'User with this id or email already exists' });
-      return;
-    }
-    const newUser: User = { id, name, email };
+
+    const newUserId = generateUniqueId();
+
+    const newUser: User = {
+      id: newUserId,
+      name,
+      email
+    };
+
     users.push(newUser);
     res.status(201).json(newUser);
   } catch (error) {
     console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Error creating user' });
+    res.status(500).json({ message: 'Error creating user', error: error.message });
   }
 };
+
+
+
+
+// export const createUser = (req: express.Request, res: express.Response): void => {
+//   try {
+//     const { id, name, email } = req.body as { id: number, name: string, email: string };
+
+//     if (!id || !name || !email) {
+//       res.status(400).json({ message: 'All fields (id, name, email, password) are required' });
+//       return;
+//     }
+//     const existingUser = users.find(user => user.id === id || user.email === email);
+//     if (existingUser) {
+//       res.status(400).json({ message: 'User with this id or email already exists' });
+//       return;
+//     }
+//     const newUser: User = { id, name, email };
+//     users.push(newUser);
+//     res.status(201).json(newUser);
+//   } catch (error) {
+//     console.error('Error creating user:', error);
+//     res.status(500).json({ message: 'Error creating user' });
+//   }
+// };
 
 
 // update an user

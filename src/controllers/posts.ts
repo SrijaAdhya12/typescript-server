@@ -45,17 +45,44 @@ export const getAllPosts = (req: express.Request, res: express.Response): void =
 
 
 // Create post
+
+const generateUniqueId = (): number => {
+    let id: number;
+    do {
+        id = Math.floor(Math.random() * 1000);
+    } while (posts.some(post => post.id === id));
+    return id;
+};
+
 export const createPost = (req: express.Request, res: express.Response): void => {
     try {
-        const { id, post, createdBy } = req.body as { id: number, post: string, createdBy: number };
-        const newPost: Post = { id, post, createdBy };
+        const { post, createdBy } = req.body as { post: string, createdBy: number };
+        const newPostId = generateUniqueId();
+        const newPost: Post = {
+            id: newPostId,
+            post,
+            createdBy
+        };
+
         posts.push(newPost);
         res.status(201).json(newPost);
     } catch (error) {
-        console.error('Error creating user:', error);
-        res.status(500).json({ message: 'Error creating user' });
+        console.error('Error creating post:', error);
+        res.status(500).json({ message: 'Error creating post', error: error.message });
     }
 };
+
+// export const createPost = (req: express.Request, res: express.Response): void => {
+//     try {
+//         const { id, post, createdBy } = req.body as { id: number, post: string, createdBy: number };
+//         const newPost: Post = { id, post, createdBy };
+//         posts.push(newPost);
+//         res.status(201).json(newPost);
+//     } catch (error) {
+//         console.error('Error creating user:', error);
+//         res.status(500).json({ message: 'Error creating user' });
+//     }
+// };
 
 // update a post
 export const updatePost = (req: express.Request, res: express.Response): void => {
