@@ -1,3 +1,3 @@
 import UserRoutes from "./users"
-
-export { UserRoutes }
+import PostRoutes from "./posts"
+export { UserRoutes , PostRoutes }
