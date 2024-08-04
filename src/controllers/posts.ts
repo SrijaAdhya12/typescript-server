@@ -7,6 +7,32 @@ const fetchAllPosts = (): Post[] => {
 };
 
 
+// Get Post by Id
+
+export const getUserById = (req: express.Request, res: express.Response): void => {
+    try {
+        const postId = parseInt(req.params.id, 10);
+
+        if (isNaN(postId)) {
+            res.status(400).json({ message: 'Invalid user ID' });
+            return;
+        }
+
+        const post = posts.find(post => post.id === postId);
+
+        if (!post) {
+            res.status(404).json({ message: 'Post not found' });
+            return;
+        }
+
+        res.status(200).json(post);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Error find post', error: error.message });
+    }
+};
+
+
 // Get all posts
 export const getAllPosts = (req: express.Request, res: express.Response): void => {
     try {
