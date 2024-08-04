@@ -62,6 +62,38 @@ export const updatePost = (req: express.Request, res: express.Response): void =>
     }
 };
 
+export const patchPost = (req: express.Request, res: express.Response): void => {
+    try {
+        const postId = parseInt(req.params.id, 10);
+        const { post: newPostContent } = req.body;
+
+        if (isNaN(postId)) {
+            res.status(400).json({ message: 'Invalid post ID' });
+            return;
+        }
+
+        const postIndex = posts.findIndex(post => post.id === postId);
+        if (postIndex === -1) {
+            res.status(404).json({ message: 'Post not found' });
+            return;
+        }
+
+        const currentPost = posts[postIndex];
+
+        const updatedPost: Post = {
+            ...currentPost,
+            post: newPostContent ?? currentPost.post
+        };
+
+        posts[postIndex] = updatedPost;
+
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Error updating post', error: error.message });
+    }
+};
+
 // delete an post
 export const deletePost = (req: express.Request, res: express.Response): void => {
     try {
