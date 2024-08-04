@@ -75,6 +75,42 @@ export const updateUser = (req: express.Request, res: express.Response): void =>
 };
 
 
+// patch an User
+export const patchUser = (req: express.Request, res: express.Response): void => {
+  try {
+    const userId = parseInt(req.params.id, 10);
+    const { name, email } = req.body;
+
+    if (isNaN(userId)) {
+      res.status(400).json({ message: 'Invalid user ID' });
+      return;
+    }
+
+    const userIndex = users.findIndex(user => user.id === userId);
+    if (userIndex === -1) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    const currentUser = users[userIndex];
+
+    // Create the updated user object with provided fields only
+    const updatedUser: User = {
+      ...currentUser,
+      name: name ?? currentUser.name,
+      email: email ?? currentUser.email
+    };
+
+    users[userIndex] = updatedUser;
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Error updating user', error: error.message });
+  }
+};
+
+
 // delete an user
 export const deleteUser = (req: express.Request, res: express.Response): void => {
   try {

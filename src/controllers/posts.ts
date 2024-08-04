@@ -62,6 +62,8 @@ export const updatePost = (req: express.Request, res: express.Response): void =>
     }
 };
 
+// patch a post
+
 export const patchPost = (req: express.Request, res: express.Response): void => {
     try {
         const postId = parseInt(req.params.id, 10);
